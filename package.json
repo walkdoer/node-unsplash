@@ -4,6 +4,9 @@
   "description": "unsplash api with node",
   "main": "index.js",
   "scripts": {
+    "compile": "babel src -d lib",
+    "watch": "babel src --watch -d lib",
+    "prepublish": "npm run compile",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
