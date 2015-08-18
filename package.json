@@ -1,0 +1,30 @@
+{
+  "name": "node-unsplash",
+  "version": "1.0.0",
+  "description": "unsplash api with node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangmhao/node-unsplash.git"
+  },
+  "keywords": [
+    "api",
+    "unsplash"
+  ],
+  "author": "andrew zhang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhangmhao/node-unsplash/issues"
+  },
+  "homepage": "https://github.com/zhangmhao/node-unsplash#readme",
+  "devDependencies": {
+    "babel": "^5.8.21"
+  },
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "request": "^2.60.0"
+  }
+}
