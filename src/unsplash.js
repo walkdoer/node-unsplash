@@ -3,24 +3,28 @@ import request from 'request'
 
 const PROTOCAL = 'https';
 const HOST = 'unsplash.com';
+const PREFIX = `${PROTOCAL}://${HOST}`;
 
 let getImages = (html) => {
     let $ = cheerio.load(html);
-    let $photos = $('.photo');
+    let $photoContainers = $('.photo-container');
     let images = [];
-    $photos.each((i, photo)=> {
-        let $photo = $(photo);
+    $photoContainers.each((i, photoContainer)=> {
+        let $photoContainer = $(photoContainer);
+        let $photo = $photoContainer.find('.photo');
+        let $photoDesc = $photoContainer.find('.photo-description');
         let $img = $photo.find('img');
         let downloadLink = $photo.find('>a').attr('href');
         let imgSrc = $img.attr('src');
-        let $title = $photo.find('.photo-title a');
-        let authorLink = $title.attr('href');
-        let title = $title.find('span').text();
+        let $links = $photoDesc.find('a');
+        let $author = $links.eq(1);
+        let authorName = $author.text();
+        let authorLink = $author.attr('href');
         images.push({
-            title: title,
             download: `${PROTOCAL}://${HOST}${downloadLink}`,
             authorPage: `${PROTOCAL}://${HOST}/${authorLink}`,
-            src: imgSrc
+            src: imgSrc,
+            author: authorName
         });
     });
     return images;
@@ -33,7 +37,7 @@ let Unsplash = {
      * https://unsplash.com/grid?_={timestamp}&page={pageNumber}
      */
     page (pageNumber) {
-        const url = `https://unsplash.com/grid?page=${pageNumber}`;
+        const url = `${PREFIX}/grid?page=${pageNumber}`;
         return new Promise((resolve, reject) => {
             request(url, function (err, response, body) {
                 if (err) {
@@ -59,8 +63,34 @@ let Unsplash = {
      * category
      * page
      */
-    filter (keyword) {
-
+    filter (params = {}) {
+        let url = `${PREFIX}/filter?`;
+        let requestParams = {search:{}};
+        let {keyword, category, scope, page} = params;
+        if (keyword) {
+            url += `&search[keyword]=${keyword}`;
+        }
+        if (scope === 'all') {
+            url += `&scope[featured]=0`
+        } else if (scope === 'featured') {
+            url += `&scope[featured]=1`
+        }
+        if (page) {
+            url += `&page=${page}`;
+        }
+        return new Promise((resolve, reject) => {
+            request(url, requestParams, function (err, response, body) {
+                if (err) {
+                    return reject(err);
+                }
+                if (response.statusCode === 200) {
+                    let images = getImages(body);
+                    resolve(images);
+                } else {
+                    reject(response);
+                }
+            });
+        })
     }
 }
 

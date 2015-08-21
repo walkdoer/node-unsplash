@@ -7,8 +7,22 @@ Promise.all([
     Unsplash.page(2)
 ])
 .then(function (result) {
-    console.log(result[0].length);
-    console.log(result[1].length);
+    console.log(result[0]);
+    console.log(result[1]);
 }, function (err) {
     console.log(err);
+});
+
+
+Unsplash.filter({
+    keyword: "people",
+    page: 1
+}).then(function (images) {
+    console.log(images);
+    return Unsplash.filter({
+        keyword: "people",
+        page: 2
+    });
+}).then(function (images) {
+    console.log(images);
 });
