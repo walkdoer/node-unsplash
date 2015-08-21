@@ -1,6 +1,6 @@
 {
   "name": "node-unsplash",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "unsplash api with node",
   "main": "index.js",
   "scripts": {
