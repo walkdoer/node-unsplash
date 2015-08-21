@@ -1,1 +1,1 @@
-module.exports = require('lib/unsplash.js');
+module.exports = require('./lib/unsplash.js');
