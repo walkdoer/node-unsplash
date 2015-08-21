@@ -2,6 +2,14 @@
 
 var Unsplash = require('../lib/unsplash.js');
 console.log('load page');
+
+Unsplash.page(1, function (err, images) {
+    if (err) {
+        return console.error(err);
+    }
+    console.log(images);
+});
+
 Promise.all([
     Unsplash.page(1),
     Unsplash.page(2)

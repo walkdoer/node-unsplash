@@ -4,7 +4,7 @@ import request from 'request'
 const PROTOCAL = 'https';
 const HOST = 'unsplash.com';
 const PREFIX = `${PROTOCAL}://${HOST}`;
-
+const noop = (a) => a;
 let getImages = (html) => {
     let $ = cheerio.load(html);
     let $photoContainers = $('.photo-container');
@@ -36,21 +36,24 @@ let Unsplash = {
      *
      * https://unsplash.com/grid?_={timestamp}&page={pageNumber}
      */
-    page (pageNumber) {
+    page (pageNumber, cb=noop) {
         const url = `${PREFIX}/grid?page=${pageNumber}`;
         return new Promise((resolve, reject) => {
-            request(url, function (err, response, body) {
+            request(url, (err, response, body) => {
                 if (err) {
+                    cb(err, null);
                     return reject(err);
                 }
                 if (response.statusCode === 200) {
                     let images = getImages(body);
+                    cb(null, images);
                     resolve(images);
                 } else {
+                    cb(reponse, null);
                     reject(response);
                 }
-            })
-        })
+            });
+        });
     },
 
     /**
@@ -63,9 +66,8 @@ let Unsplash = {
      * category
      * page
      */
-    filter (params = {}) {
+    filter (params = {}, cb=noop) {
         let url = `${PREFIX}/filter?`;
-        let requestParams = {search:{}};
         let {keyword, category, scope, page} = params;
         if (keyword) {
             url += `&search[keyword]=${keyword}`;
@@ -79,18 +81,21 @@ let Unsplash = {
             url += `&page=${page}`;
         }
         return new Promise((resolve, reject) => {
-            request(url, requestParams, function (err, response, body) {
+            request(url, (err, response, body) => {
                 if (err) {
+                    cb(err, null);
                     return reject(err);
                 }
                 if (response.statusCode === 200) {
                     let images = getImages(body);
+                    cb(null, images);
                     resolve(images);
                 } else {
+                    cb(reponse, null);
                     reject(response);
                 }
             });
-        })
+        });
     }
 }
 
