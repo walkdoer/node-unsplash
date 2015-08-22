@@ -8,6 +8,13 @@ $ npm install node-unsplash
 
 ## Usage
 
+```
+var Unsplash = require('node-unsplash');
+```
+
+
+## API
+
 ### `Unsplash.page(pageNumber)`
 
 list photos of each page, suppor `promise`
